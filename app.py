@@ -6,7 +6,7 @@ import streamlit as st
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 
-load_dotenv()
+#load_dotenv()
 
 ## Langsmith Tracking
 #os.environ["LANGSMITH_API_KEY"]=os.getenv("LANGSMITH_API_KEY")
