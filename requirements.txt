@@ -1,5 +1,5 @@
 langchain
 langchain-openai
 langchain_community
-lanhchain_core
+langchain_core
 streamlit
