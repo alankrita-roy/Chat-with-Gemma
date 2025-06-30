@@ -27,7 +27,7 @@ st.title("Q&A Chatbot With OpenAI")
 
 ## Sidebar for settings
 st.sidebar.title("Settings")
-api_key=st.sidebar.text_input("Enter your Open AI API Key:",type="password")
+api_key=st.sidebar.text_input("Enter your OpenAI API Key:",type="password")
 
 ## Select the OpenAI model
 engine=st.sidebar.selectbox("Select Open AI model",["gpt-4o","gpt-4-turbo","gpt-4"])
@@ -46,5 +46,3 @@ if user_input and api_key:
 
 elif user_input:
     st.warning("Please enter your OpenAI API Key")
-else:
-    st.write("Please ask your query")
