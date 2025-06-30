@@ -1,35 +1,50 @@
-#import os
-#from dotenv import load_dotenv
-
-from langchain_community.llms import Ollama
 import streamlit as st
-from langchain_core.prompts import ChatPromptTemplate
+import openai
+from langchain_openai import ChatOpenAI
 from langchain_core.output_parsers import StrOutputParser
-
-#load_dotenv()
-
-## Langsmith Tracking
-#os.environ["LANGSMITH_API_KEY"]=os.getenv("LANGSMITH_API_KEY")
-#os.environ["LANGSMITH_TRACING_V2"]="true"
-#os.environ["LANGSMITH_PROJECT"]=os.getenv("LANGSMITH_PROJECT")
+from langchain_core.prompts import ChatPromptTemplate
 
 ## Prompt Template
 prompt=ChatPromptTemplate.from_messages(
     [
-        ("system","You are a helpful assistant. Please respond to the question asked"),
-        ("user","Question:{question}")
+        ("system","Act like a helpful AI assistant and respond to user queries"),
+        ("user","Query:{query}")
     ]
 )
 
-## streamlit framework
-st.title("Chat With Gemma")
-input_text=st.text_input("What question you have in mind?")
+
+def generate_response(Query,api_key,engine,temperature,max_tokens):
+    openai.api_key=api_key
+
+    llm=ChatOpenAI(model=engine)
+    output_parser=StrOutputParser()
+    chain=prompt|llm|output_parser
+    answer=chain.invoke({'query':query})
+    return answer
 
 
-## Ollama Llama2 model
-llm=Ollama(model="gemma:2b")
-output_parser=StrOutputParser()
-chain=prompt|llm|output_parser
+st.title("Q&A Chatbot With OpenAI")
 
-if input_text:
-    st.write(chain.invoke({"question":input_text}))
+## Sidebar for settings
+st.sidebar.title("Settings")
+api_key=st.sidebar.text_input("Enter your Open AI API Key:",type="password")
+
+## Select the OpenAI model
+engine=st.sidebar.selectbox("Select Open AI model",["gpt-4o","gpt-4-turbo","gpt-4"])
+
+## Adjust response parameter
+temperature=st.sidebar.slider("Temperature",min_value=0.0,max_value=1.0,value=0.7)
+max_tokens = st.sidebar.slider("Max Tokens", min_value=50, max_value=300, value=150)
+
+## Main interface for user input
+st.write("Ask any question")
+user_input=st.text_input("You:")
+
+if user_input and api_key:
+    response=generate_response(user_input,api_key,engine,temperature,max_tokens)
+    st.write(response)
+
+elif user_input:
+    st.warning("Please enter your OpenAI API Key")
+else:
+    st.write("Please ask your query")
