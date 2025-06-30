@@ -13,14 +13,18 @@ prompt=ChatPromptTemplate.from_messages(
 )
 
 
-def generate_response(Query,api_key,engine,temperature,max_tokens):
-    openai.api_key=api_key
-
-    llm=ChatOpenAI(model=engine)
-    output_parser=StrOutputParser()
-    chain=prompt|llm|output_parser
-    answer=chain.invoke({'query':query})
+def generate_response(query, api_key, engine, temperature, max_tokens):
+    llm = ChatOpenAI(
+        model=engine,
+        api_key=api_key,
+        temperature=temperature,
+        max_tokens=max_tokens
+    )
+    output_parser = StrOutputParser()
+    chain = prompt | llm | output_parser
+    answer = chain.invoke({'query': query})
     return answer
+
 
 
 st.title("Q&A Chatbot With OpenAI")
