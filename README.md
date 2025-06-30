@@ -1,1 +1,1 @@
-# Chat-with-Gemma
+# OpenAI Q&A Chatbot 
